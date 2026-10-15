@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 
 import { ApiError } from '../api/client'
 import * as payApi from '../api/pay'
-import type { CoinPackage, LedgerEntry, Wallet } from '../api/pay'
+import { newIdempotencyKey, type CoinPackage, type LedgerEntry, type Wallet } from '../api/pay'
 import AppShell from '../components/AppShell.vue'
 import { useAuthStore } from '../stores/auth'
 import { useToastStore } from '../stores/toast'
@@ -93,7 +93,7 @@ async function buy(item: CoinPackage) {
   }
   payingCode.value = item.code
   try {
-    const key = crypto.randomUUID()
+    const key = newIdempotencyKey()
     const res = await payApi.createRecharge({ package_code: item.code, idempotency_key: key, channel: channel.value })
     if (!res.pay_url) {
       await router.push({ path: '/pay/result', query: { order_no: res.order.order_no } })

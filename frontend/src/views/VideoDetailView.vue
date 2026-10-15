@@ -9,6 +9,7 @@ import * as commentApi from '../api/comment'
 import * as likeApi from '../api/like'
 import type { Comment, Video } from '../api/types'
 import * as payApi from '../api/pay'
+import { newIdempotencyKey } from '../api/pay'
 import * as videoApi from '../api/video'
 import { useAuthStore } from '../stores/auth'
 import { useSocialStore } from '../stores/social'
@@ -101,7 +102,7 @@ async function sendGift(code: string) {
       video_id: id.value,
       gift_code: code,
       count: 1,
-      idempotency_key: crypto.randomUUID(),
+      idempotency_key: newIdempotencyKey(),
     })
     giftCount.value += 1
     toast.success(`送出礼物，作者获得 ${res.gift.diamond_credit} 钻石`)
